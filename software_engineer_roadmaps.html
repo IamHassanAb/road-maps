@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Engineer Roadmaps</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f4f0;
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --text3: #9c9a92;
+    --border: rgba(0,0,0,0.12);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    --c1:#534AB7;--c1b:#EEEDFE;--c1t:#3C3489;
+    --c2:#0F6E56;--c2b:#E1F5EE;--c2t:#085041;
+    --c3:#185FA5;--c3b:#E6F1FB;--c3t:#0C447C;
+    --c4:#BA7517;--c4b:#FAEEDA;--c4t:#854F0B;
+    --c5:#993C1D;--c5b:#FAECE7;--c5t:#712B13;
+    --c6:#3B6D11;--c6b:#EAF3DE;--c6t:#27500A;
+    --c7:#A32D2D;--c7b:#FCEBEB;--c7t:#791F1F;
+    --c8:#5F5E5A;--c8b:#F1EFE8;--c8t:#444441;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252522;
+      --text: #e8e6de;
+      --text2: #9c9a92;
+      --text3: #6b6963;
+      --border: rgba(255,255,255,0.1);
+
+      --c1:#AFA9EC;--c1b:#26215C;--c1t:#CECBF6;
+      --c2:#5DCAA5;--c2b:#04342C;--c2t:#9FE1CB;
+      --c3:#85B7EB;--c3b:#042C53;--c3t:#B5D4F4;
+      --c4:#EF9F27;--c4b:#412402;--c4t:#FAC775;
+      --c5:#F0997B;--c5b:#4A1B0C;--c5t:#F5C4B3;
+      --c6:#97C459;--c6b:#173404;--c6t:#C0DD97;
+      --c7:#F09595;--c7b:#501313;--c7t:#F7C1C1;
+      --c8:#B4B2A9;--c8b:#2C2C2A;--c8t:#D3D1C7;
+    }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 32px 24px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 14px;
+    color: var(--text2);
+  }
+
+  .pg {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 520px) { .pg { grid-template-columns: repeat(2, 1fr); } }
+
+  .pc {
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: border-color .15s, opacity .12s, transform .1s;
+    user-select: none;
+    background: var(--bg2);
+  }
+  .pc:hover { opacity: .85; transform: translateY(-1px); }
+  .pc.active { border-color: var(--active-color) !important; }
+  .pn { font-size: 13px; font-weight: 500; color: var(--text); }
+  .pi { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  .det {
+    background: var(--bg2);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    border: 0.5px solid var(--border);
+  }
+
+  .dhead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .dtitle { font-size: 16px; font-weight: 500; color: var(--text); }
+  .dbadge {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 0.5px solid;
+  }
+
+  .stgh {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .stgn {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 0.5px solid;
+    white-space: nowrap;
+  }
+  .stgline {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .chip {
+    font-size: 12px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 0.5px solid;
+  }
+
+  .sarr {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text3);
+    margin: 6px 0 12px;
+    line-height: 1;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-size: 12px;
+    color: var(--text3);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Software engineer roadmaps</h1>
+  <p>Select a path to explore the skills and tools at each stage.</p>
+</header>
+
+<div class="pg" id="pg"></div>
+<div class="det" id="det"></div>
+
+<footer>Foundation → Core skills → Advanced → Specialization</footer>
+
+<script>
+const paths = [
+  {id:1, label:'Frontend', desc:'UI & browser',
+    stages:[
+      {name:'Foundation',     skills:['HTML5','CSS3','JavaScript ES6+','Git & GitHub','Chrome DevTools','Figma basics']},
+      {name:'Core skills',    skills:['React / Vue / Angular','TypeScript','REST APIs','npm / yarn','Webpack / Vite','Responsive design','SASS / PostCSS']},
+      {name:'Advanced',       skills:['State management (Redux, Zustand)','Testing (Jest, Cypress)','Next.js / Nuxt / Remix','Performance optimization','Accessibility (WCAG)','GraphQL','CI/CD pipelines']},
+      {name:'Specialization', skills:['Design systems','Micro-frontends','WebAssembly','Progressive Web Apps','Web animations (GSAP, Framer)','SSR / ISR patterns']}
+    ]},
+  {id:2, label:'Backend', desc:'APIs & databases',
+    stages:[
+      {name:'Foundation',     skills:['Python / Java / Go / Node.js','Git & GitHub','SQL fundamentals','HTTP & REST concepts','Data structures & algorithms']},
+      {name:'Core skills',    skills:['Web frameworks (Django, Spring, Express, Gin)','PostgreSQL / MySQL','Authentication (JWT, OAuth2)','Docker basics','Redis caching','Unit testing']},
+      {name:'Advanced',       skills:['Microservices architecture','Kafka / RabbitMQ','Database optimization & indexing','Kubernetes','gRPC','Cloud platforms (AWS / GCP / Azure)','Distributed tracing']},
+      {name:'Specialization', skills:['Distributed systems design','Event-driven architecture','CQRS / Event sourcing','Service mesh (Istio)','Database sharding','High-availability patterns']}
+    ]},
+  {id:3, label:'Full Stack', desc:'End-to-end',
+    stages:[
+      {name:'Foundation',     skills:['HTML / CSS / JavaScript','Python or Node.js','Git & GitHub','SQL basics','HTTP fundamentals']},
+      {name:'Core skills',    skills:['React','Node.js / Django / Laravel','REST APIs','PostgreSQL / MongoDB','Docker','TypeScript']},
+      {name:'Advanced',       skills:['GraphQL','Testing (unit & e2e)','CI/CD pipelines','Cloud basics','Auth & security','Performance profiling']},
+      {name:'Specialization', skills:['System architecture','DevOps fundamentals','React Native (mobile)','Real-time (WebSockets)','Monorepo tooling (Turborepo)','SaaS product patterns']}
+    ]},
+  {id:4, label:'DevOps / Cloud', desc:'Infra & reliability',
+    stages:[
+      {name:'Foundation',     skills:['Linux & Bash scripting','Networking (TCP/IP, DNS, TLS)','Git','Python scripting','Cloud concepts (IaaS / PaaS / SaaS)']},
+      {name:'Core skills',    skills:['Docker & container registries','Terraform / Pulumi (IaC)','AWS / GCP / Azure','GitHub Actions / Jenkins','Prometheus & Grafana','Ansible']},
+      {name:'Advanced',       skills:['Kubernetes (EKS / GKE / AKS)','Service mesh (Istio / Linkerd)','GitOps (ArgoCD / Flux)','Secrets management (Vault)','SRE practices & SLOs','ELK / OpenTelemetry stack']},
+      {name:'Specialization', skills:['Platform engineering','FinOps & cost optimization','Multi-cloud strategy','Chaos engineering','Zero-downtime deployment','Compliance automation (SOC2)']}
+    ]},
+  {id:5, label:'Data / ML', desc:'AI & analytics',
+    stages:[
+      {name:'Foundation',     skills:['Python','SQL','Statistics & probability','Linear algebra basics','Pandas / NumPy','Jupyter notebooks']},
+      {name:'Core skills',    skills:['Scikit-learn','Data pipelines (Airflow, Prefect)','Spark / Databricks','Feature engineering','A/B testing','Tableau / Power BI / Looker']},
+      {name:'Advanced',       skills:['PyTorch / TensorFlow','MLOps (MLflow, Weights & Biases)','Model serving (FastAPI, TorchServe)','Kubeflow / Vertex AI','LLM fine-tuning','Vector databases (Pinecone, Qdrant)']},
+      {name:'Specialization', skills:['Generative AI & RAG pipelines','Reinforcement learning','Real-time ML (streaming)','Model interpretability (SHAP)','AI safety & alignment','Cloud ML (SageMaker, Vertex)']}
+    ]},
+  {id:6, label:'Mobile', desc:'iOS & Android',
+    stages:[
+      {name:'Foundation',     skills:['Swift (iOS) or Kotlin (Android)','Git','OOP & design patterns','UI/UX mobile principles','Xcode / Android Studio']},
+      {name:'Core skills',    skills:['UIKit / SwiftUI','Jetpack Compose','REST API integration','Local storage (CoreData, Room)','Push notifications','App lifecycle & permissions']},
+      {name:'Advanced',       skills:['React Native / Flutter (cross-platform)','Unit & UI testing (XCTest, Espresso)','CI/CD (Fastlane, Bitrise)','App Store & Play Store ops','Performance profiling & memory','Offline-first architecture']},
+      {name:'Specialization', skills:['Custom native modules','AR (ARKit / ARCore)','On-device ML (CoreML, TensorFlow Lite)','Widgets & app extensions','Deep linking & universal links','App security & obfuscation']}
+    ]},
+  {id:7, label:'Security', desc:'AppSec & infra',
+    stages:[
+      {name:'Foundation',     skills:['Networking (TCP/IP, HTTP, DNS)','Linux fundamentals','Python scripting','Cryptography basics','OWASP Top 10']},
+      {name:'Core skills',    skills:['Penetration testing basics','Burp Suite','SIEM tools (Splunk, Sentinel)','Cloud security (IAM, GuardDuty)','Vulnerability scanning (Nessus, Nuclei)','Zero trust principles']},
+      {name:'Advanced',       skills:['Threat modeling (STRIDE / PASTA)','Red & blue teaming','Incident response playbooks','Compliance (SOC2, ISO 27001)','AppSec in CI/CD (SAST / DAST)','Container & Kubernetes security']},
+      {name:'Specialization', skills:['CVE research & responsible disclosure','Security architecture review','Malware analysis & reverse engineering','Bug bounty programs','DevSecOps tooling','Digital forensics']}
+    ]},
+  {id:8, label:'Eng Manager', desc:'People & strategy',
+    stages:[
+      {name:'Foundation',     skills:['3–5 yrs IC experience','Written & verbal communication','Agile / Scrum facilitation','CI/CD & code review awareness','Giving & receiving feedback']},
+      {name:'Core skills',    skills:['Structured 1:1s & coaching','Hiring & technical interviewing','Roadmap & sprint planning','Jira / Linear / Shortcut','Performance reviews','Stakeholder management']},
+      {name:'Advanced',       skills:['OKR setting & tracking','Cross-team program coordination','Budget & headcount planning','Technical strategy & trade-offs','Conflict resolution','Executive communication']},
+      {name:'Specialization', skills:['Org design & team topology','M&A technical diligence','Build vs buy decisions','Distributed & remote leadership','Succession planning','Product-eng partnership']}
+    ]}
+];
+
+const ci = i => `var(--c${i})`;
+const cb = i => `var(--c${i}b)`;
+const ct = i => `var(--c${i}t)`;
+
+let sel = 1;
+
+function render() {
+  const pg = document.getElementById('pg');
+  pg.innerHTML = paths.map(p => `
+    <div class="pc${p.id===sel?' active':''}"
+         style="background:${cb(p.id)};${p.id===sel?`--active-color:${ci(p.id)};border-color:${ci(p.id)};`:''}"
+         onclick="sel=${p.id};render()">
+      <div class="pn">${p.label}</div>
+      <div class="pi">${p.desc}</div>
+    </div>
+  `).join('');
+
+  const path = paths.find(p => p.id === sel);
+  document.getElementById('det').innerHTML = `
+    <div class="dhead">
+      <span class="dtitle">${path.label} engineer roadmap</span>
+      <span class="dbadge" style="background:${cb(path.id)};color:${ct(path.id)};border-color:${ci(path.id)}">${path.desc}</span>
+    </div>
+    ${path.stages.map((s, i) => `
+      <div>
+        <div class="stgh">
+          <span class="stgn" style="background:${cb(path.id)};color:${ct(path.id)};border-color:${ci(path.id)}">${s.name}</span>
+          <div class="stgline"></div>
+        </div>
+        <div class="chips">
+          ${s.skills.map(sk => `<span class="chip" style="background:${cb(path.id)};color:${ct(path.id)};border-color:${ci(path.id)}">${sk}</span>`).join('')}
+        </div>
+        ${i < path.stages.length - 1 ? `<div class="sarr">↓</div>` : ''}
+      </div>
+    `).join('')}
+  `;
+}
+
+render();
+</script>
+</body>
+</html>
