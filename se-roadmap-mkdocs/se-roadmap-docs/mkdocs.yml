@@ -1,0 +1,80 @@
+site_name: Software Engineer Roadmaps
+site_description: Complete career roadmaps for software engineers — from foundations to staff level, including the AI era.
+site_author: Engineering Team
+docs_dir: docs
+repo_url: ""
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - toc.follow
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Roadmaps:
+    - Overview: roadmaps/index.md
+    - Frontend: roadmaps/frontend.md
+    - Backend: roadmaps/backend.md
+    - Full Stack: roadmaps/fullstack.md
+    - DevOps / Cloud: roadmaps/devops.md
+    - Data / ML: roadmaps/data-ml.md
+    - Mobile: roadmaps/mobile.md
+    - Security: roadmaps/security.md
+    - Eng Manager: roadmaps/eng-manager.md
+  - AI Era Skills:
+    - Overview: ai-era/index.md
+    - Frontend: ai-era/frontend.md
+    - Backend: ai-era/backend.md
+    - Full Stack: ai-era/fullstack.md
+    - DevOps / Cloud: ai-era/devops.md
+    - Data / ML: ai-era/data-ml.md
+    - Mobile: ai-era/mobile.md
+    - Security: ai-era/security.md
+    - Eng Manager: ai-era/eng-manager.md
+  - Deep Dive:
+    - Overview: deep-dive/index.md
+    - Frontend: deep-dive/frontend.md
+    - Backend: deep-dive/backend.md
+    - Full Stack: deep-dive/fullstack.md
+    - DevOps / Cloud: deep-dive/devops.md
+    - Data / ML: deep-dive/data-ml.md
+    - Mobile: deep-dive/mobile.md
+    - Security: deep-dive/security.md
+    - Eng Manager: deep-dive/eng-manager.md
