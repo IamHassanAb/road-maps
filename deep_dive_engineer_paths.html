@@ -1,0 +1,448 @@
+
+<style>
+.wrap{padding:4px 0;}
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+@media(max-width:480px){.pg{grid-template-columns:repeat(2,1fr);}}
+.pc{padding:8px 10px;border-radius:8px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;user-select:none;background:var(--color-background-secondary);}
+.pc:hover{opacity:.8;}
+.pc.sel{border-color:var(--sel-c);}
+.pn{font-size:12px;font-weight:500;color:var(--color-text-primary);}
+.tabs{display:flex;gap:2px;margin-bottom:14px;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:0;}
+.tab{font-size:12px;padding:7px 12px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;}
+.tab:hover{color:var(--color-text-primary);}
+.tab.on{color:var(--color-text-primary);border-bottom-color:var(--tab-c);font-weight:500;}
+.pane{display:none;}.pane.on{display:block;}
+.lvlg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(max-width:420px){.lvlg{grid-template-columns:1fr;}}
+.lvl{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:14px;}
+.lvlh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;flex-wrap:wrap;}
+.lvlt{font-size:13px;font-weight:500;color:var(--color-text-primary);}
+.yrs{font-size:11px;color:var(--color-text-tertiary);}
+.lvlf{font-size:12px;color:var(--color-text-secondary);margin-bottom:8px;line-height:1.4;}
+.skls{display:flex;flex-wrap:wrap;gap:4px;}
+.sk{font-size:11px;padding:2px 7px;border-radius:12px;border:0.5px solid;}
+.toolg{display:flex;flex-direction:column;gap:12px;}
+.toolcat{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:12px 14px;}
+.toolcath{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;}
+.tools{display:flex;flex-wrap:wrap;gap:5px;}
+.tool{font-size:12px;padding:3px 9px;border-radius:20px;border:0.5px solid;}
+.tool.core{font-weight:500;}
+.lpg{display:flex;flex-direction:column;gap:0;}
+.lstep{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.lstep:not(:last-child)::after{content:'';position:absolute;left:15px;top:32px;bottom:0;width:0.5px;background:var(--color-border-secondary);}
+.lnum{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;border:0.5px solid;}
+.lbody{flex:1;padding-top:4px;}
+.ltitle{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px;}
+.ldesc{font-size:12px;color:var(--color-text-secondary);line-height:1.4;margin-bottom:4px;}
+.lmeta{display:flex;gap:8px;flex-wrap:wrap;}
+.ltag{font-size:11px;padding:1px 7px;border-radius:10px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-tertiary);}
+.ivg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(max-width:420px){.ivg{grid-template-columns:1fr;}}
+.ivc{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:12px 14px;}
+.ivch{font-size:12px;font-weight:500;margin-bottom:8px;}
+.ivcs{display:flex;flex-direction:column;gap:4px;}
+.ivct{font-size:12px;color:var(--color-text-secondary);padding-left:10px;position:relative;line-height:1.4;}
+.ivct::before{content:'·';position:absolute;left:2px;color:var(--color-text-tertiary);}
+.rg{display:flex;flex-direction:column;gap:8px;}
+.row{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.rjt{font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:160px;}
+.ryrs{font-size:12px;color:var(--color-text-tertiary);min-width:80px;}
+.rsal{font-size:13px;font-weight:500;margin-left:auto;}
+.rbar{flex:1;min-width:80px;height:4px;border-radius:2px;background:var(--color-border-tertiary);overflow:hidden;}
+.rbarfill{height:100%;border-radius:2px;}
+.det{background:var(--color-background-secondary);border-radius:12px;padding:16px 18px;border:0.5px solid var(--color-border-tertiary);}
+</style>
+
+<div class="wrap">
+<div class="pg" id="pg"></div>
+<div class="det" id="det"></div>
+</div>
+
+<script>
+const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+const P={
+paths:[
+{id:1,label:'Frontend',a:dark?'#AFA9EC':'#534AB7',ab:dark?'#26215C':'#EEEDFE',at:dark?'#CECBF6':'#3C3489',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Build UI components from designs, fix bugs, write clean HTML/CSS/JS.',skills:['HTML & CSS fundamentals','JavaScript basics','React (hooks, state)','Git workflows','Browser DevTools','REST API consumption','Responsive layouts']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Own features end-to-end, mentor juniors, improve code quality and performance.',skills:['TypeScript','State management (Redux/Zustand)','Component architecture','Testing (Jest, RTL)','Web performance (Core Web Vitals)','Accessibility (WCAG AA)','CI/CD basics','Design systems']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Drive architecture decisions, define patterns, unblock the team, own complex features.',skills:['System design for frontend','Micro-frontends','SSR/SSG/ISR (Next.js)','Advanced TypeScript','Bundle optimization','GraphQL','Security (XSS, CSRF)','Mentoring']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Set technical direction across teams, shape engineering culture, drive org-wide decisions.',skills:['Frontend platform strategy','Cross-team API contracts','Performance budgets at scale','Developer tooling & DX','AI-assisted UI toolchains','RFC & technical writing','Org-level mentoring']},
+],
+tools:[
+{cat:'Frameworks',items:[{n:'React',c:true},{n:'Next.js',c:true},{n:'TypeScript',c:true},{n:'Vue',c:false},{n:'Svelte',c:false},{n:'Remix',c:false}]},
+{cat:'Styling',items:[{n:'Tailwind CSS',c:true},{n:'CSS Modules',c:true},{n:'Styled Components',c:false},{n:'Radix UI',c:false},{n:'shadcn/ui',c:false}]},
+{cat:'State & data',items:[{n:'React Query',c:true},{n:'Zustand',c:true},{n:'Redux Toolkit',c:false},{n:'SWR',c:false},{n:'Jotai',c:false}]},
+{cat:'Testing',items:[{n:'Jest',c:true},{n:'React Testing Library',c:true},{n:'Cypress',c:false},{n:'Playwright',c:true},{n:'Storybook',c:false}]},
+{cat:'Build & tooling',items:[{n:'Vite',c:true},{n:'Webpack',c:false},{n:'ESLint',c:true},{n:'Prettier',c:true},{n:'Turborepo',c:false}]},
+{cat:'AI tools',items:[{n:'v0.dev',c:true},{n:'Cursor',c:true},{n:'GitHub Copilot',c:true},{n:'Bolt.new',c:false}]},
+],
+learning:[
+{title:'HTML, CSS & JS fundamentals',desc:'MDN Web Docs, The Odin Project, or freeCodeCamp. Non-negotiable foundation.',time:'2–3 months',type:'Free'},
+{title:'React & component thinking',desc:'Official React docs (react.dev) + build 3–5 real projects with hooks and state.',time:'1–2 months',type:'Free'},
+{title:'TypeScript',desc:'Total TypeScript by Matt Pocock — best structured course available.',time:'3–4 weeks',type:'Paid'},
+{title:'Next.js & full-stack patterns',desc:'Official Next.js docs + Vercel tutorials. Learn App Router, RSC, and deployment.',time:'3–4 weeks',type:'Free'},
+{title:'Testing',desc:'Kent C. Dodds\' Testing Trophy approach — start with integration tests.',time:'2–3 weeks',type:'Free/Paid'},
+{title:'Performance & accessibility',desc:'web.dev/learn + Lighthouse auditing. Study Core Web Vitals and ARIA.',time:'2–3 weeks',type:'Free'},
+{title:'System design for frontend',desc:'Read "Frontend System Design" resources on ByteByteGo, build complex apps.',time:'Ongoing',type:'Mixed'},
+],
+interviews:[
+{cat:'JavaScript',topics:['Closures & scope','Event loop & async/await','Prototypes & classes','ES6+ features','Memory management']},
+{cat:'React',topics:['Reconciliation & virtual DOM','useEffect pitfalls','Performance (memo, useMemo, useCallback)','State management patterns','Error boundaries']},
+{cat:'CSS & layout',topics:['Flexbox vs Grid','CSS specificity','BEM / CSS-in-JS','Responsive design patterns','Animation performance']},
+{cat:'System design',topics:['Component library architecture','Infinite scroll / virtualization','Real-time updates (polling vs WS)','Caching strategies','Micro-frontend tradeoffs']},
+],
+roles:[
+{title:'Junior Frontend Engineer',yrs:'0–2',sal:'$75k–$110k',pct:25},
+{title:'Frontend Engineer',yrs:'2–5',sal:'$110k–$155k',pct:50},
+{title:'Senior Frontend Engineer',yrs:'5–8',sal:'$155k–$210k',pct:75},
+{title:'Staff Frontend Engineer',yrs:'8+',sal:'$210k–$300k+',pct:90},
+]},
+
+{id:2,label:'Backend',a:dark?'#5DCAA5':'#0F6E56',ab:dark?'#04342C':'#E1F5EE',at:dark?'#9FE1CB':'#085041',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Build CRUD APIs, write SQL queries, work within existing architecture patterns.',skills:['Python / Node.js / Go basics','REST API design','SQL (SELECT, JOIN, INDEX)','Git & code review','HTTP fundamentals','Basic auth (JWT)','Unit testing']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Own services end-to-end, design APIs, improve reliability and performance.',skills:['System design basics','PostgreSQL optimization','Docker & containers','Redis caching','Message queues (RabbitMQ)','OAuth2 / OIDC','Integration testing','API versioning']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Architect distributed systems, drive reliability, define patterns used across teams.',skills:['Microservices patterns','Kafka / event streaming','gRPC & Protobuf','Database sharding & replication','Distributed tracing (OpenTelemetry)','Kubernetes','Security design','Incident response']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Define system architecture across the org, make build-vs-buy decisions, lead technical strategy.',skills:['Distributed systems at scale','Platform abstractions','Capacity planning','Cross-team API governance','AI agent integration design','Technical writing & RFCs','Engineering leadership']},
+],
+tools:[
+{cat:'Languages',items:[{n:'Python',c:true},{n:'Go',c:true},{n:'Node.js',c:true},{n:'Java',c:false},{n:'Rust',c:false}]},
+{cat:'Frameworks',items:[{n:'FastAPI',c:true},{n:'Django',c:false},{n:'Express',c:true},{n:'Gin (Go)',c:false},{n:'Spring Boot',c:false}]},
+{cat:'Databases',items:[{n:'PostgreSQL',c:true},{n:'Redis',c:true},{n:'MongoDB',c:false},{n:'Elasticsearch',c:false},{n:'ClickHouse',c:false}]},
+{cat:'Messaging',items:[{n:'Kafka',c:true},{n:'RabbitMQ',c:false},{n:'AWS SQS/SNS',c:false},{n:'NATS',c:false}]},
+{cat:'Infrastructure',items:[{n:'Docker',c:true},{n:'Kubernetes',c:true},{n:'AWS/GCP/Azure',c:true},{n:'Terraform',c:false},{n:'Nginx',c:true}]},
+{cat:'AI integration',items:[{n:'OpenAI / Anthropic SDK',c:true},{n:'LangChain',c:false},{n:'Pinecone / pgvector',c:true},{n:'LlamaIndex',c:false}]},
+],
+learning:[
+{title:'Master a backend language',desc:'Python with FastAPI or Go are highest ROI in 2025. Build a real REST API project.',time:'2–3 months',type:'Free/Paid'},
+{title:'SQL & database design',desc:'Mode Analytics SQL tutorial + "Designing Data-Intensive Applications" (Kleppmann).',time:'1–2 months',type:'Mixed'},
+{title:'Distributed systems concepts',desc:'"Designing Data-Intensive Applications" is the must-read. Supplement with Martin Fowler blog.',time:'2–3 months',type:'Paid'},
+{title:'Docker & containerization',desc:'Play With Docker + official docs. Build, ship, and run your app in containers.',time:'2–3 weeks',type:'Free'},
+{title:'Cloud fundamentals (AWS/GCP)',desc:'AWS Solutions Architect Associate or GCP Associate Cloud Engineer cert.',time:'1–2 months',type:'Paid'},
+{title:'System design',desc:'ByteByteGo by Alex Xu — covers real interview scenarios and production patterns.',time:'Ongoing',type:'Paid'},
+{title:'AI integration (LLM APIs)',desc:'Anthropic & OpenAI cookbooks + build a RAG system from scratch.',time:'2–3 weeks',type:'Free'},
+],
+interviews:[
+{cat:'Data structures',topics:['Arrays, hashmaps, sets','Trees & graphs (BFS/DFS)','Heaps & priority queues','Dynamic programming','Sliding window patterns']},
+{cat:'System design',topics:['URL shortener / Pastebin','Rate limiter design','Design a chat system','Distributed caching','Database indexing strategies']},
+{cat:'Databases',topics:['ACID vs BASE','Normalization & denormalization','Query optimization & EXPLAIN','Transactions & locking','CAP theorem']},
+{cat:'APIs & architecture',topics:['REST vs GraphQL vs gRPC','Auth: JWT, OAuth2, OIDC','Idempotency & retries','Event-driven architecture','Microservices tradeoffs']},
+],
+roles:[
+{title:'Junior Backend Engineer',yrs:'0–2',sal:'$80k–$115k',pct:25},
+{title:'Backend Engineer',yrs:'2–5',sal:'$115k–$160k',pct:50},
+{title:'Senior Backend Engineer',yrs:'5–8',sal:'$160k–$220k',pct:75},
+{title:'Staff Backend Engineer',yrs:'8+',sal:'$220k–$320k+',pct:90},
+]},
+
+{id:3,label:'Full Stack',a:dark?'#85B7EB':'#185FA5',ab:dark?'#042C53':'#E6F1FB',at:dark?'#B5D4F4':'#0C447C',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Build complete small features (UI + API + DB), work on well-defined tickets.',skills:['React basics','Node.js or Python backend','REST API design','SQL fundamentals','Git','HTML & CSS','Basic deployment']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Own entire product features from DB schema to UI, improve team velocity.',skills:['TypeScript (front & back)','PostgreSQL + ORMs','Docker basics','Auth (JWT/OAuth)','Testing (unit + e2e)','State management','API design patterns']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Architect full systems, make tech stack decisions, define patterns used across the product.',skills:['System architecture','Database optimization','Next.js (full-stack)','GraphQL or tRPC','Performance optimization','Security design','Cloud deployment','Mentoring juniors']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Define the technical roadmap, lead cross-functional initiatives, set engineering culture.',skills:['Platform architecture','AI feature strategy','Build vs buy decisions','Technical leadership','Developer experience','Product-engineering alignment','Org design input']},
+],
+tools:[
+{cat:'Frontend',items:[{n:'React',c:true},{n:'Next.js',c:true},{n:'TypeScript',c:true},{n:'Tailwind',c:true},{n:'Vite',c:false}]},
+{cat:'Backend',items:[{n:'Node.js / Express',c:true},{n:'tRPC',c:false},{n:'Prisma ORM',c:true},{n:'FastAPI',c:false},{n:'Drizzle',c:false}]},
+{cat:'Database',items:[{n:'PostgreSQL',c:true},{n:'Redis',c:true},{n:'Supabase',c:false},{n:'MongoDB',c:false},{n:'PlanetScale',c:false}]},
+{cat:'Deployment',items:[{n:'Vercel',c:true},{n:'Render',c:false},{n:'AWS',c:true},{n:'Docker',c:true},{n:'Railway',c:false}]},
+{cat:'AI layer',items:[{n:'OpenAI / Anthropic SDK',c:true},{n:'Vercel AI SDK',c:true},{n:'LangChain',c:false},{n:'pgvector',c:true}]},
+],
+learning:[
+{title:'HTML, CSS, JS + React',desc:'Build 3–5 real projects. The Odin Project is a great free structured path.',time:'3–4 months',type:'Free'},
+{title:'Backend with Node.js or Python',desc:'Build a REST API with a real database. Understand HTTP, auth, and error handling.',time:'2–3 months',type:'Free'},
+{title:'TypeScript (both ends)',desc:'Total TypeScript + ts-node for backend. Type everything consistently.',time:'3–4 weeks',type:'Paid'},
+{title:'Database design',desc:'Learn SQL properly, then learn an ORM (Prisma). Understand indexes and queries.',time:'3–4 weeks',type:'Free'},
+{title:'Full-stack frameworks (Next.js)',desc:'Build a full SaaS app with Next.js App Router, Server Actions, and Prisma.',time:'1–2 months',type:'Free'},
+{title:'Authentication deep dive',desc:'Implement OAuth2 from scratch once, then use NextAuth / Lucia for real projects.',time:'1–2 weeks',type:'Free'},
+{title:'AI feature integration',desc:'Add LLM chat, vector search, and streaming responses to a project you\'ve built.',time:'2–3 weeks',type:'Free'},
+],
+interviews:[
+{cat:'JavaScript / TypeScript',topics:['Async/await & Promises','TypeScript generics','Event loop','ES6+ patterns','Error handling']},
+{cat:'System design',topics:['Design a SaaS product','URL shortener','Real-time features','Auth system design','File upload system']},
+{cat:'React + backend',topics:['Data fetching patterns','Server vs client components','API rate limiting','Database N+1 problem','Caching strategies']},
+{cat:'Product thinking',topics:['Feature scoping & trade-offs','Performance vs developer UX','Schema evolution','Scaling a monolith','Testing strategy']},
+],
+roles:[
+{title:'Junior Full Stack Engineer',yrs:'0–2',sal:'$75k–$115k',pct:25},
+{title:'Full Stack Engineer',yrs:'2–5',sal:'$115k–$160k',pct:50},
+{title:'Senior Full Stack Engineer',yrs:'5–8',sal:'$155k–$215k',pct:75},
+{title:'Staff / Tech Lead',yrs:'8+',sal:'$215k–$310k+',pct:90},
+]},
+
+{id:4,label:'DevOps',a:dark?'#EF9F27':'#BA7517',ab:dark?'#412402':'#FAEEDA',at:dark?'#FAC775':'#854F0B',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Maintain CI/CD pipelines, respond to alerts, write basic scripts and IaC.',skills:['Linux & Bash','Git','Docker basics','AWS / GCP fundamentals','CI/CD (GitHub Actions)','Basic monitoring (Grafana)','Python scripting']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Build and own infrastructure, implement observability, improve deployment reliability.',skills:['Kubernetes (deployments, services)','Terraform / Pulumi','Prometheus & alerting','Log aggregation (ELK / Loki)','SRE practices','Secrets management (Vault)','Helm charts','Incident response']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Design platform architecture, drive reliability standards, mentor the team on infra best practices.',skills:['Multi-cloud architecture','GitOps (ArgoCD, Flux)','Service mesh (Istio)','Distributed tracing','FinOps & cost optimization','Chaos engineering','Compliance (SOC2, ISO 27001)','Capacity planning']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Define the platform strategy, build internal developer platforms, drive org-wide reliability culture.',skills:['Platform engineering','Developer experience (DX)','Org-wide SLO frameworks','AI/ML infrastructure strategy','Build vs buy decisions','Security architecture','Cross-team technical leadership']},
+],
+tools:[
+{cat:'Containers & orchestration',items:[{n:'Docker',c:true},{n:'Kubernetes',c:true},{n:'Helm',c:true},{n:'containerd',c:false},{n:'k3s',c:false}]},
+{cat:'IaC',items:[{n:'Terraform',c:true},{n:'Pulumi',c:false},{n:'Ansible',c:false},{n:'AWS CDK',c:false},{n:'Crossplane',c:false}]},
+{cat:'CI/CD',items:[{n:'GitHub Actions',c:true},{n:'ArgoCD',c:true},{n:'Jenkins',c:false},{n:'Tekton',c:false},{n:'Flux',c:false}]},
+{cat:'Observability',items:[{n:'Prometheus',c:true},{n:'Grafana',c:true},{n:'OpenTelemetry',c:true},{n:'Datadog',c:false},{n:'Loki',c:false}]},
+{cat:'Cloud',items:[{n:'AWS (EKS, RDS, S3)',c:true},{n:'GCP',c:false},{n:'Azure',c:false},{n:'Cloudflare',c:false}]},
+{cat:'AI/ML infra',items:[{n:'vLLM',c:false},{n:'Triton Inference Server',c:false},{n:'Kubeflow',c:false},{n:'NVIDIA CUDA',c:false}]},
+],
+learning:[
+{title:'Linux fundamentals',desc:'"The Linux Command Line" book (free online). Practice daily — everything runs on Linux.',time:'1–2 months',type:'Free'},
+{title:'Docker & containers',desc:'Official Docker getting started + build and ship a real app. Understand layers and networking.',time:'2–3 weeks',type:'Free'},
+{title:'Kubernetes (CKA certification)',desc:'Killer.sh + KodeKloud. CKA is the gold-standard cert for K8s practitioners.',time:'2–3 months',type:'Paid'},
+{title:'Terraform (IaC)',desc:'HashiCorp official tutorials + build a real AWS environment with VPC, EC2, RDS.',time:'3–4 weeks',type:'Free'},
+{title:'AWS / GCP certification',desc:'AWS Solutions Architect Associate or GCP Professional Cloud Architect.',time:'2–3 months',type:'Paid'},
+{title:'Observability (Prometheus + Grafana)',desc:'Grafana Labs tutorials + instrument a real service with custom metrics and dashboards.',time:'2–3 weeks',type:'Free'},
+{title:'SRE practices',desc:'"Site Reliability Engineering" (Google SRE book) — free online. Understand SLOs/SLAs/error budgets.',time:'Ongoing',type:'Free'},
+],
+interviews:[
+{cat:'Linux & networking',topics:['Process management & signals','File permissions & ownership','TCP/IP, DNS, TLS explained','Load balancing strategies','Firewall & iptables basics']},
+{cat:'Kubernetes',topics:['Pod lifecycle & health probes','Services: ClusterIP vs NodePort vs LB','RBAC & namespaces','HPA / VPA scaling','Debugging crashlooping pods']},
+{cat:'Reliability',topics:['SLO, SLA, error budget concepts','Blue/green vs canary deployments','Incident response process','Post-mortem culture','Chaos engineering principles']},
+{cat:'IaC & cloud',topics:['Terraform state management','Immutable vs mutable infra','Cost optimization strategies','Multi-region architecture','Security: IAM least privilege']},
+],
+roles:[
+{title:'DevOps / SRE Engineer',yrs:'0–2',sal:'$85k–$120k',pct:25},
+{title:'Senior DevOps / SRE',yrs:'3–6',sal:'$130k–$180k',pct:60},
+{title:'Principal SRE',yrs:'6–10',sal:'$180k–$250k',pct:80},
+{title:'Platform Engineer Lead',yrs:'8+',sal:'$220k–$320k+',pct:90},
+]},
+
+{id:5,label:'Data/ML',a:dark?'#97C459':'#3B6D11',ab:dark?'#173404':'#EAF3DE',at:dark?'#C0DD97':'#27500A',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Clean data, run exploratory analysis, build simple models, write SQL reports.',skills:['Python (Pandas, NumPy)','SQL (intermediate)','Jupyter notebooks','Scikit-learn basics','Data visualization (Matplotlib, Seaborn)','Statistics fundamentals','Git']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Own ML pipelines, deploy models, build dashboards, drive A/B test analysis.',skills:['PyTorch or TensorFlow','Feature engineering','MLflow or W&B','Airflow or Prefect pipelines','Spark basics','A/B testing (stats)','Model monitoring','Looker / Tableau']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Architect ML systems, define experimentation frameworks, lead cross-functional data projects.',skills:['LLM fine-tuning','RAG systems','Distributed training','MLOps at scale','Data platform architecture','Statistical rigor','Causal inference','Team leadership']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Define data strategy, lead AI roadmap, advise product and leadership on ML capabilities.',skills:['GenAI platform strategy','Foundation model evaluation','AI governance','Synthetic data pipelines','Research collaboration','Cross-org data standards','ML platform design']},
+],
+tools:[
+{cat:'Core Python',items:[{n:'Pandas',c:true},{n:'NumPy',c:true},{n:'Scikit-learn',c:true},{n:'Matplotlib',c:true},{n:'Polars',c:false}]},
+{cat:'Deep learning',items:[{n:'PyTorch',c:true},{n:'TensorFlow / Keras',c:false},{n:'Hugging Face Transformers',c:true},{n:'JAX',c:false}]},
+{cat:'MLOps',items:[{n:'MLflow',c:true},{n:'Weights & Biases',c:true},{n:'DVC',c:false},{n:'Kubeflow',c:false},{n:'BentoML',c:false}]},
+{cat:'Data pipelines',items:[{n:'Apache Airflow',c:true},{n:'dbt',c:true},{n:'Spark',c:false},{n:'Prefect',c:false},{n:'Dagster',c:false}]},
+{cat:'Databases',items:[{n:'PostgreSQL + pgvector',c:true},{n:'Pinecone',c:false},{n:'Snowflake',c:false},{n:'BigQuery',c:false},{n:'Qdrant',c:false}]},
+{cat:'GenAI stack',items:[{n:'OpenAI / Anthropic API',c:true},{n:'LangChain / LlamaIndex',c:true},{n:'vLLM',c:false},{n:'Ollama',c:false}]},
+],
+learning:[
+{title:'Python + statistics foundation',desc:'"Python for Data Analysis" (Wes McKinney) + Khan Academy Statistics. Non-negotiable.',time:'2–3 months',type:'Mixed'},
+{title:'Machine learning fundamentals',desc:'Andrew Ng\'s ML Specialization on Coursera. Best structured intro available.',time:'2–3 months',type:'Paid'},
+{title:'Deep learning with PyTorch',desc:'"Deep Learning with PyTorch" (official book, free) + fast.ai Practical DL course.',time:'2–3 months',type:'Free'},
+{title:'Hugging Face & transformers',desc:'Hugging Face NLP course (free). Build fine-tuned models on real datasets.',time:'3–4 weeks',type:'Free'},
+{title:'MLOps fundamentals',desc:'Full Stack Deep Learning (free) — covers deployment, monitoring, and MLOps.',time:'1–2 months',type:'Free'},
+{title:'LLMs & RAG systems',desc:'DeepLearning.AI short courses (LangChain, RAG, Agents). Build 3 real GenAI projects.',time:'1 month',type:'Paid'},
+{title:'SQL + data warehousing',desc:'Mode Analytics SQL school + dbt fundamentals. Essential for data-adjacent roles.',time:'3–4 weeks',type:'Free'},
+],
+interviews:[
+{cat:'ML fundamentals',topics:['Bias-variance tradeoff','Regularization (L1 vs L2)','Cross-validation strategies','Class imbalance handling','Feature selection methods']},
+{cat:'Deep learning',topics:['Backpropagation intuition','Attention mechanism & transformers','Overfitting & dropout','Batch norm vs layer norm','Transfer learning']},
+{cat:'Statistics & A/B testing',topics:['Hypothesis testing & p-values','Central limit theorem','Bayesian vs frequentist','Multiple testing correction','Experiment sizing / power']},
+{cat:'Applied ML',topics:['Recommendation system design','Fraud detection pipeline','RAG system architecture','Model monitoring strategies','LLM evaluation methods']},
+],
+roles:[
+{title:'Data / ML Analyst',yrs:'0–2',sal:'$70k–$105k',pct:20},
+{title:'ML Engineer / Data Scientist',yrs:'2–5',sal:'$120k–$170k',pct:55},
+{title:'Senior ML Engineer',yrs:'5–8',sal:'$170k–$240k',pct:78},
+{title:'Staff ML / Research Engineer',yrs:'8+',sal:'$240k–$400k+',pct:95},
+]},
+
+{id:6,label:'Mobile',a:dark?'#F0997B':'#993C1D',ab:dark?'#4A1B0C':'#FAECE7',at:dark?'#F5C4B3':'#712B13',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Build screens from designs, integrate REST APIs, fix UI bugs on iOS or Android.',skills:['Swift (iOS) or Kotlin (Android)','Auto Layout / Jetpack Compose basics','REST API integration (URLSession / Retrofit)','Git','App lifecycle','Basic local storage','Xcode or Android Studio']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Own features from design to App Store, implement complex UI patterns and offline support.',skills:['SwiftUI or Jetpack Compose (advanced)','CoreData / Room DB','Push notifications (APNs / FCM)','Authentication (Sign in with Apple / Google)','Performance profiling','Unit testing (XCTest / JUnit)','CI/CD (Fastlane)']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Architect the app, define patterns, lead platform decisions, ensure quality at scale.',skills:['App architecture (MV*, TCA, MVVM)','React Native or Flutter (cross-platform)','On-device ML (CoreML / TFLite)','Custom native modules','Deep linking & universal links','App security (certificate pinning, obfuscation)','App Store / Play Store operations']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Lead mobile platform strategy, drive AI-native mobile experiences, set quality standards.',skills:['Cross-platform strategy','On-device LLM integration','AR frameworks (ARKit / ARCore)','Mobile AI platform design','Performance culture','Mentoring & hiring','Platform-level SDK design']},
+],
+tools:[
+{cat:'iOS',items:[{n:'Swift',c:true},{n:'SwiftUI',c:true},{n:'UIKit',c:false},{n:'Xcode',c:true},{n:'Combine',c:false}]},
+{cat:'Android',items:[{n:'Kotlin',c:true},{n:'Jetpack Compose',c:true},{n:'Android Studio',c:true},{n:'Hilt / Dagger',c:false},{n:'Coroutines',c:true}]},
+{cat:'Cross-platform',items:[{n:'React Native',c:true},{n:'Flutter',c:true},{n:'Expo',c:false},{n:'Kotlin Multiplatform',c:false}]},
+{cat:'Backend integration',items:[{n:'Retrofit / Alamofire',c:true},{n:'GraphQL (Apollo)',c:false},{n:'WebSockets',c:false},{n:'gRPC',c:false}]},
+{cat:'On-device AI',items:[{n:'CoreML',c:true},{n:'TensorFlow Lite',c:true},{n:'ExecuTorch',c:false},{n:'Whisper (on-device)',c:false}]},
+{cat:'DevOps',items:[{n:'Fastlane',c:true},{n:'Bitrise',c:false},{n:'Firebase',c:true},{n:'TestFlight',c:true}]},
+],
+learning:[
+{title:'Swift or Kotlin fundamentals',desc:'Apple\'s "Develop in Swift" or Google\'s Android Basics in Kotlin — official, free, excellent.',time:'2–3 months',type:'Free'},
+{title:'SwiftUI or Jetpack Compose',desc:'Hacking with Swift (Paul Hudson) for iOS. Google\'s Compose pathway for Android.',time:'1–2 months',type:'Free'},
+{title:'Networking & data persistence',desc:'URLSession + Codable (iOS) or Retrofit + Room (Android). Build an app that fetches and caches data.',time:'3–4 weeks',type:'Free'},
+{title:'App architecture',desc:'MVVM, Clean Architecture, or TCA (iOS). Architecture determines everything at scale.',time:'3–4 weeks',type:'Mixed'},
+{title:'Cross-platform with React Native or Flutter',desc:'Expo docs + build a production-quality cross-platform app.',time:'1–2 months',type:'Free'},
+{title:'App Store deployment & CI/CD',desc:'Fastlane docs + set up an automated pipeline: test → build → deploy.',time:'1–2 weeks',type:'Free'},
+{title:'On-device ML',desc:'Apple\'s CoreML & Create ML tutorials. Build a real app that classifies images or runs speech-to-text.',time:'2–3 weeks',type:'Free'},
+],
+interviews:[
+{cat:'Swift / Kotlin',topics:['ARC & memory management','Concurrency (async/await, coroutines)','Value vs reference types','Protocol-oriented (Swift) / interfaces (Kotlin)','Error handling patterns']},
+{cat:'UI & layout',topics:['Auto Layout constraints (iOS)','ConstraintLayout (Android)','SwiftUI state management','Animations & transitions','Accessibility on mobile']},
+{cat:'Architecture',topics:['MVVM vs MVC vs TCA','Dependency injection','Repository pattern','Offline-first design','App modularization']},
+{cat:'Platform specifics',topics:['App lifecycle (foreground/background)','Push notification flow','App Store review process','Keychain & secure storage','Deep linking architecture']},
+],
+roles:[
+{title:'Junior iOS / Android Engineer',yrs:'0–2',sal:'$75k–$110k',pct:25},
+{title:'iOS / Android Engineer',yrs:'2–5',sal:'$110k–$155k',pct:50},
+{title:'Senior Mobile Engineer',yrs:'5–8',sal:'$155k–$210k',pct:75},
+{title:'Staff Mobile / Platform Lead',yrs:'8+',sal:'$210k–$300k+',pct:90},
+]},
+
+{id:7,label:'Security',a:dark?'#F09595':'#A32D2D',ab:dark?'#501313':'#FCEBEB',at:dark?'#F7C1C1':'#791F1F',
+levels:[
+{title:'Junior',yrs:'0–2 yrs',focus:'Run vulnerability scans, assist with pen tests, monitor alerts, patch known CVEs.',skills:['Networking (TCP/IP, HTTP, DNS, TLS)','Linux fundamentals','Python scripting','OWASP Top 10','Burp Suite basics','Wireshark','Basic log analysis','CVE awareness']},
+{title:'Mid-level',yrs:'2–5 yrs',focus:'Lead penetration tests, build security tooling, perform threat modeling, run incident response.',skills:['Web app pentesting','Cloud security (AWS IAM, GuardDuty)','SIEM (Splunk / Sentinel)','Threat modeling (STRIDE)','SAST / DAST in CI/CD','Malware analysis basics','Security code review','Compliance (SOC2, GDPR)']},
+{title:'Senior',yrs:'5–10 yrs',focus:'Design secure systems, lead red team operations, own security architecture across products.',skills:['Red team operations','Architecture security review','Zero trust implementation','AI red teaming & LLM security','Supply chain security','ISO 27001 / FedRAMP','Binary exploitation','Cryptography design']},
+{title:'Staff/Principal',yrs:'10+ yrs',focus:'Define security culture and strategy, advise engineering on security-by-design, shape AI governance.',skills:['Enterprise security strategy','AI governance (EU AI Act)','Bug bounty program management','Security M&A due diligence','CISO advisory','Cross-org security architecture','Research leadership']},
+],
+tools:[
+{cat:'Pentesting',items:[{n:'Burp Suite',c:true},{n:'Metasploit',c:false},{n:'Nmap',c:true},{n:'SQLmap',c:false},{n:'Cobalt Strike',c:false}]},
+{cat:'SIEM / monitoring',items:[{n:'Splunk',c:true},{n:'Microsoft Sentinel',c:false},{n:'Elastic SIEM',c:false},{n:'Wazuh',c:false}]},
+{cat:'Cloud security',items:[{n:'AWS GuardDuty',c:true},{n:'AWS Security Hub',c:false},{n:'Prisma Cloud',c:false},{n:'Prowler',c:false}]},
+{cat:'Code scanning',items:[{n:'Semgrep',c:true},{n:'Snyk',c:true},{n:'SonarQube',c:false},{n:'Trivy',c:true},{n:'OWASP ZAP',c:false}]},
+{cat:'Identity & secrets',items:[{n:'HashiCorp Vault',c:true},{n:'AWS Secrets Manager',c:false},{n:'Okta / Auth0',c:false},{n:'CyberArk',c:false}]},
+{cat:'AI security',items:[{n:'Garak (LLM probe)',c:false},{n:'PromptBench',c:false},{n:'Rebuff',c:false},{n:'Custom red teaming',c:true}]},
+],
+learning:[
+{title:'Networking fundamentals',desc:'Professor Messer CompTIA Network+ materials (free on YouTube). Deep understanding of TCP/IP, DNS, TLS.',time:'1–2 months',type:'Free'},
+{title:'Linux & scripting',desc:'OverTheWire Bandit wargame + learn Python for automation. Linux is the foundation of everything.',time:'1–2 months',type:'Free'},
+{title:'Web app security (OWASP)',desc:'PortSwigger Web Security Academy (free) — the best hands-on platform for web app security.',time:'2–3 months',type:'Free'},
+{title:'CompTIA Security+ or CEH',desc:'Entry-level cert widely recognized. Covers core security concepts and is often required for compliance.',time:'1–2 months',type:'Paid'},
+{title:'Cloud security',desc:'AWS Security Specialty cert or GCP Security Engineer. Crucial as everything runs in cloud.',time:'2–3 months',type:'Paid'},
+{title:'Penetration testing (OSCP)',desc:'OSCP by Offensive Security — the gold standard pentesting cert. Challenging but highly valued.',time:'3–6 months',type:'Paid'},
+{title:'AI/LLM security',desc:'OWASP LLM Top 10 + build a prompt injection test suite. New and rapidly evolving area.',time:'Ongoing',type:'Free'},
+],
+interviews:[
+{cat:'Networking & protocols',topics:['TLS handshake explained','Common attack vectors (MITM, replay)','DNS security (DNSSEC, DoH)','Firewall rules & iptables','VPN protocols comparison']},
+{cat:'Web security',topics:['XSS vs CSRF vs SSRF','SQL injection mechanics','JWT security pitfalls','CORS misconfigurations','Cookie security attributes']},
+{cat:'Pentesting / red team',topics:['PTES methodology','Privilege escalation techniques','C2 frameworks overview','Lateral movement methods','Evidence & reporting standards']},
+{cat:'AI/LLM security',topics:['Prompt injection attacks','Model extraction threats','RAG data poisoning','Jailbreak taxonomy','Defense-in-depth for LLM apps']},
+],
+roles:[
+{title:'Security Analyst',yrs:'0–2',sal:'$65k–$100k',pct:20},
+{title:'Security Engineer / Pentester',yrs:'2–5',sal:'$110k–$155k',pct:55},
+{title:'Senior Security Engineer',yrs:'5–8',sal:'$155k–$220k',pct:75},
+{title:'Staff / Principal Security',yrs:'8+',sal:'$220k–$340k+',pct:90},
+]},
+
+{id:8,label:'Eng Manager',a:dark?'#B4B2A9':'#5F5E5A',ab:dark?'#2C2C2A':'#F1EFE8',at:dark?'#D3D1C7':'#444441',
+levels:[
+{title:'New Manager',yrs:'0–2 yrs managing',focus:'Transition from IC, build trust with reports, run effective 1:1s, improve team process.',skills:['Structured 1:1 frameworks','Agile / sprint facilitation','Technical code review awareness','Feedback models (SBI)','Hiring & leveling basics','Conflict resolution','Roadmap basics']},
+{title:'Manager',yrs:'2–5 yrs managing',focus:'Own team health and delivery, hire great engineers, manage up and across.',skills:['Performance management cycles','OKR setting','Stakeholder management','Technical strategy input','Hiring pipelines','Team health metrics','Org design basics','Budget awareness']},
+{title:'Senior Manager',yrs:'5–10 yrs managing',focus:'Lead multiple teams or a large team, set technical direction, partner with product leadership.',skills:['Managing managers','Cross-org program coordination','Technical roadmap ownership','Engineering culture','Headcount & budget planning','Executive communication','Diversity & inclusion','AI tool adoption strategy']},
+{title:'Director / VP Engineering',yrs:'10+ yrs managing',focus:'Own engineering org, define multi-year strategy, build culture, work with board / investors.',skills:['Org design & team topology','M&A technical diligence','Company-level technical vision','Engineering brand & recruiting','Build vs buy at org scale','P&L awareness','AI transformation leadership','Board-level communication']},
+],
+tools:[
+{cat:'Planning & tracking',items:[{n:'Jira',c:true},{n:'Linear',c:true},{n:'Asana',c:false},{n:'Notion',c:true},{n:'Shortcut',c:false}]},
+{cat:'Communication',items:[{n:'Slack',c:true},{n:'Loom',c:true},{n:'Confluence',c:false},{n:'Notion (docs)',c:true}]},
+{cat:'People & HR',items:[{n:'Lattice',c:false},{n:'Workday',c:false},{n:'Rippling',c:false},{n:'Culture Amp',c:false}]},
+{cat:'Metrics & data',items:[{n:'DORA metrics',c:true},{n:'LinearB / Swarmia',c:false},{n:'Amplitude',c:false},{n:'Looker',c:false}]},
+{cat:'AI tools for managers',items:[{n:'Cursor (code review support)',c:false},{n:'GitHub Copilot (team metrics)',c:false},{n:'Meeting AI (Otter, Fireflies)',c:true},{n:'Claude / ChatGPT (writing)',c:true}]},
+],
+learning:[
+{title:'Be an excellent IC first',desc:'The best managers have strong technical credibility. Spend 3–5 years as a senior+ engineer.',time:'3–5 yrs',type:'Experience'},
+{title:'"The Manager\'s Path" by Camille Fournier',desc:'The canonical eng management book. Read it before making the switch and re-read every year.',time:'1 week',type:'Book'},
+{title:'"An Elegant Puzzle" by Will Larson',desc:'Covers systems thinking for engineering orgs. Invaluable for senior managers and directors.',time:'1 week',type:'Book'},
+{title:'Structured 1:1 frameworks',desc:'Lara Hogan\'s resources (larahogan.me) — practical, research-backed management techniques.',time:'Ongoing',type:'Free'},
+{title:'OKR methodology',desc:'Christina Wodtke\'s "Radical Focus" — how to set and execute meaningful OKRs.',time:'1 week',type:'Book'},
+{title:'AI tools for engineering teams',desc:'Learn hands-on: use Cursor, Copilot, and Claude daily. Understand what your engineers experience.',time:'Ongoing',type:'Experience'},
+{title:'Finance & headcount basics',desc:'Learn how P&L, headcount planning, and budget cycles work. Talk to your finance partner.',time:'Ongoing',type:'Experience'},
+],
+interviews:[
+{cat:'Leadership & people',topics:['Handling low performers','Motivating senior ICs','Peer conflict between reports','Giving difficult feedback','Retaining talent in competitive market']},
+{cat:'Technical judgment',topics:['When to take on technical debt','Evaluating architectural proposals','Balancing speed vs quality','Build vs buy decisions','AI tooling ROI assessment']},
+{cat:'Process & delivery',topics:['Improving team velocity','Reducing WIP & context switching','Incident post-mortem culture','Sprint planning at scale','DORA metrics interpretation']},
+{cat:'Strategy',topics:['Setting team OKRs','Roadmap prioritization','Stakeholder alignment techniques','Hiring for culture & skill','Growing engineers into seniors']},
+],
+roles:[
+{title:'Engineering Manager',yrs:'2–5 yrs IC + managing',sal:'$150k–$200k',pct:50},
+{title:'Senior Engineering Manager',yrs:'5+ yrs managing',sal:'$190k–$260k',pct:70},
+{title:'Director of Engineering',yrs:'8+ yrs',sal:'$250k–$350k',pct:85},
+{title:'VP of Engineering',yrs:'12+ yrs',sal:'$330k–$600k+',pct:97},
+]},
+]};
+
+let sel=1,tab='levels';
+const tabs=[{k:'levels',l:'Career levels'},{k:'tools',l:'Tools'},{k:'learning',l:'Learning path'},{k:'interviews',l:'Interviews'},{k:'roles',l:'Roles & salary'}];
+
+function chip(txt,bg,border,color){return `<span class="sk" style="background:${bg};border-color:${border};color:${color}">${txt}</span>`;}
+
+function renderLevels(path){
+  const clrs=['#EAF3DE','#E6F1FB','#EEEDFE','#FAEEDA'];
+  const cbrs=['#3B6D11','#185FA5','#534AB7','#BA7517'];
+  const ctxs=['#27500A','#0C447C','#3C3489','#854F0B'];
+  const clrsd=['#173404','#042C53','#26215C','#412402'];
+  const cbrsd=['#97C459','#85B7EB','#AFA9EC','#EF9F27'];
+  const ctxsd=['#C0DD97','#B5D4F4','#CECBF6','#FAC775'];
+  return `<div class="lvlg">${path.levels.map((l,i)=>`
+    <div class="lvl">
+      <div class="lvlh"><span class="lvlt">${l.title}</span><span class="yrs">${l.yrs}</span></div>
+      <div class="lvlf">${l.focus}</div>
+      <div class="skls">${l.skills.map(s=>chip(s,dark?clrsd[i]:clrs[i],dark?cbrsd[i]:cbrs[i],dark?ctxsd[i]:ctxs[i])).join('')}</div>
+    </div>`).join('')}</div>`;
+}
+
+function renderTools(path){
+  const coreB=dark?path.ab:path.ab;
+  const coreBr=dark?path.a:path.a;
+  const coreT=dark?path.at:path.at;
+  const grayB=dark?'#2C2C2A':'#F1EFE8';
+  const grayBr=dark?'#888780':'#B4B2A9';
+  const grayT=dark?'#D3D1C7':'#444441';
+  return `<div class="toolg">${path.tools.map(g=>`
+    <div class="toolcat">
+      <div class="toolcath">${g.cat}</div>
+      <div class="tools">${g.items.map(t=>`<span class="tool${t.c?' core':''}" style="background:${t.c?coreB:grayB};border-color:${t.c?coreBr:grayBr};color:${t.c?coreT:grayT}">${t.n}</span>`).join('')}</div>
+    </div>`).join('')}</div>`;
+}
+
+function renderLearning(path){
+  const bg=path.ab;const br=path.a;const tx=path.at;
+  const typeCols={Free:{b:dark?'#04342C':'#E1F5EE',br:dark?'#5DCAA5':'#0F6E56',t:dark?'#9FE1CB':'#085041'},Paid:{b:dark?'#412402':'#FAEEDA',br:dark?'#EF9F27':'#BA7517',t:dark?'#FAC775':'#854F0B'},'Mixed':{b:dark?'#26215C':'#EEEDFE',br:dark?'#AFA9EC':'#534AB7',t:dark?'#CECBF6':'#3C3489'},Book:{b:dark?'#04342C':'#E1F5EE',br:dark?'#5DCAA5':'#0F6E56',t:dark?'#9FE1CB':'#085041'},Experience:{b:dark?'#2C2C2A':'#F1EFE8',br:dark?'#888780':'#5F5E5A',t:dark?'#D3D1C7':'#444441'},'Free/Paid':{b:dark?'#26215C':'#EEEDFE',br:dark?'#AFA9EC':'#534AB7',t:dark?'#CECBF6':'#3C3489'},Ongoing:{b:dark?'#2C2C2A':'#F1EFE8',br:dark?'#888780':'#5F5E5A',t:dark?'#D3D1C7':'#444441'}};
+  return `<div class="lpg">${path.learning.map((s,i)=>{
+    const tc=typeCols[s.type]||typeCols['Mixed'];
+    return `<div class="lstep">
+      <div class="lnum" style="background:${bg};border-color:${br};color:${tx}">${i+1}</div>
+      <div class="lbody">
+        <div class="ltitle">${s.title}</div>
+        <div class="ldesc">${s.desc}</div>
+        <div class="lmeta">
+          <span class="ltag">${s.time}</span>
+          <span class="ltag" style="background:${tc.b};border-color:${tc.br};color:${tc.t}">${s.type}</span>
+        </div>
+      </div>
+    </div>`;}).join('')}</div>`;
+}
+
+function renderInterviews(path){
+  const bg=path.ab;const br=path.a;const tx=path.at;
+  return `<div class="ivg">${path.interviews.map(c=>`
+    <div class="ivc">
+      <div class="ivch" style="color:${tx};background:${bg};padding:4px 9px;border-radius:8px;display:inline-block;margin-bottom:8px;border:0.5px solid ${br}">${c.cat}</div>
+      <div class="ivcs">${c.topics.map(t=>`<div class="ivct">${t}</div>`).join('')}</div>
+    </div>`).join('')}</div>`;
+}
+
+function renderRoles(path){
+  return `<div class="rg">${path.roles.map(r=>`
+    <div class="row">
+      <div class="rjt">${r.title}</div>
+      <div class="ryrs">${r.yrs}</div>
+      <div class="rbar"><div class="rbarfill" style="width:${r.pct}%;background:${path.a}"></div></div>
+      <div class="rsal" style="color:${path.a}">${r.sal}</div>
+    </div>`).join('')}</div>`;
+}
+
+function render(){
+  const pg=document.getElementById('pg');
+  pg.innerHTML=P.paths.map(p=>`
+    <div class="pc${p.id===sel?' sel':''}" style="${p.id===sel?`--sel-c:${p.a};border-color:${p.a};`:''}" onclick="sel=${p.id};render()">
+      <div class="pn">${p.label}</div>
+    </div>`).join('');
+  const path=P.paths.find(p=>p.id===sel);
+  const tabHtml=tabs.map(t=>`<button class="tab${t.k===tab?' on':''}" style="${t.k===tab?`--tab-c:${path.a};`:''}" onclick="tab='${t.k}';render()">${t.l}</button>`).join('');
+  let content='';
+  if(tab==='levels') content=renderLevels(path);
+  else if(tab==='tools') content=renderTools(path);
+  else if(tab==='learning') content=renderLearning(path);
+  else if(tab==='interviews') content=renderInterviews(path);
+  else if(tab==='roles') content=renderRoles(path);
+  document.getElementById('det').innerHTML=`<div class="tabs" style="overflow-x:auto">${tabHtml}</div><div>${content}</div>`;
+}
+render();
+</script>
